@@ -1,7 +1,12 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import useSWR from "swr";
 
-export default function Home() {
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+export default function Home(props) {
+  const initialData = props.data;
+  const { data, error } = useSWR("/api/hello", fetcher, { initialData });
   return (
     <div className={styles.container}>
       <Head>
@@ -11,11 +16,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to <a href="https://nextjs.org">{!!data && data.name}</a>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -56,10 +61,19 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
         </a>
       </footer>
     </div>
-  )
+  );
+}
+
+// // This gets called on every request
+export async function getServerSideProps({ req }) {
+  // Fetch data from external API
+  const data = await fetcher(process.env.API_URL + `/api/hello`);
+
+  // Pass data to the page via props
+  return { props: { data } };
 }
