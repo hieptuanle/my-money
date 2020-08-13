@@ -93,9 +93,17 @@
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
+button.card {
+  background: none;
+}
+
+button.card:disabled {
+  color: #d3d3d3;
+}
+
+button.card:hover:not(:disabled),
+button.card:focus:not(:disabled),
+button.card:active:not(:disabled) {
   color: #4aa813;
   border-color: #4aa813;
 }
@@ -121,4 +129,22 @@
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+.container input,
+.container select {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #474747;
+  font-size: 1.5rem;
+  width: 100%;
+  text-align: right;
+}
+
+.container input:focus,
+.container select:focus {
+  outline: none;
+  border-bottom: 2px solid #4aa813;
+  color: #4aa813;
 }

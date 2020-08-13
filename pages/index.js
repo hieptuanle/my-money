@@ -1,14 +1,16 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import useSWR from "swr";
-import { fetcher } from "../lib/fetcher";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>🤑 My Money</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>My Money</title>
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤑</text></svg>"
+        ></link>
       </Head>
 
       <main className={styles.main}>
@@ -19,15 +21,19 @@ export default function Home() {
         <p className={styles.description}>Simple money management.</p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Create &rarr;</h3>
-            <p>New money entry.</p>
-          </a>
+          <Link href="/money-entries/create">
+            <a className={styles.card}>
+              <h3>Create &rarr;</h3>
+              <p>New money entry.</p>
+            </a>
+          </Link>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>List &rarr;</h3>
-            <p>Show all your money entries.</p>
-          </a>
+          <Link href="/money-entries">
+            <a className={styles.card}>
+              <h3>List &rarr;</h3>
+              <p>Show all your money entries.</p>
+            </a>
+          </Link>
 
           <a
             href="https://github.com/vercel/next.js/tree/master/examples"
@@ -41,8 +47,8 @@ export default function Home() {
             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
             className={styles.card}
           >
-            <h3>About &rarr;</h3>
-            <p>Why this project?</p>
+            <h3>Friends &rarr;</h3>
+            <p>We live in a social world.</p>
           </a>
         </div>
       </main>
