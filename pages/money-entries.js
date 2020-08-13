@@ -29,6 +29,7 @@ export default function ListMoneyEntries({ moneyEntries }) {
         <table>
           <thead>
             <tr>
+              <th>No</th>
               <th>ID</th>
               <th>Created</th>
               <th>Contact</th>
@@ -40,8 +41,14 @@ export default function ListMoneyEntries({ moneyEntries }) {
             {map(moneyEntries, (moneyEntry, index) => {
               const created = new Date(moneyEntry.created);
               return (
-                <tr key={moneyEntry._id}>
+                <tr
+                  key={moneyEntry._id}
+                  onClick={() => {
+                    router.push("/money-entries/" + moneyEntry._id);
+                  }}
+                >
                   <td>{index + 1}</td>
+                  <td>{moneyEntry._id.slice(-4)}</td>
                   <td>
                     {created.getDate()}/{created.getMonth() + 1}
                   </td>
