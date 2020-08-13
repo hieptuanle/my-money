@@ -3,12 +3,12 @@ import withErrorHandler from "../../lib/errorHandler";
 
 async function get(req, res) {
   const moneyEntries = await MoneyEntry.list();
-  res.status(200).json({ moneyEntries });
+  res.status(200).json(moneyEntries);
 }
 
 async function post(req, res) {
-  const result = await MoneyEntry.create(req.body);
-  res.status(200).json({ moneyEntry: req.body, result });
+  const moneyEntry = await MoneyEntry.create(req.body);
+  res.status(200).json(moneyEntry);
 }
 
 export default withErrorHandler(async (req, res) => {

@@ -2,9 +2,9 @@ import MoneyEntry from "../../../lib/services/MoneyEntry";
 import withErrorHandler from "../../../lib/errorHandler";
 
 async function get(req, res) {
-  const result = await MoneyEntry.get({ _id: req.query.moneyEntryId });
-  if (result) {
-    res.json(result);
+  const moneyEntry = await MoneyEntry.get({ _id: req.query.moneyEntryId });
+  if (moneyEntry) {
+    res.json(moneyEntry);
   } else {
     res.status(400);
     res.json({ message: "No documents found!" });
@@ -12,17 +12,20 @@ async function get(req, res) {
 }
 
 async function remove(req, res) {
-  const result = await MoneyEntry.remove({ _id: req.query.moneyEntryId });
-  res.json(result);
+  await MoneyEntry.remove({ _id: req.query.moneyEntryId });
+  res.json({ _id: req.query.moneyEntryId });
 }
 
 async function update(req, res) {
   const { _id, ...data } = req.body;
-  const result = await MoneyEntry.update({
+  await MoneyEntry.update({
     _id: req.query.moneyEntryId,
     ...data,
   });
-  res.json(result);
+  res.json({
+    _id: req.query.moneyEntryId,
+    ...data,
+  });
 }
 
 export default withErrorHandler(async (req, res) => {
