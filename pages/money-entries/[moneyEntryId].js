@@ -141,22 +141,22 @@ export default function ViewMoneyEntry({ moneyEntry }) {
   );
 }
 
-export async function getStaticPaths() {
-  const moneyEntries = await fetcher(
-    process.env.API_URL + "/api/money-entries"
-  );
+// export async function getStaticPaths() {
+//   const moneyEntries = await fetcher(
+//     process.env.API_URL + "/api/money-entries"
+//   );
 
-  const paths = moneyEntries.map((moneyEntry) => {
-    return `/money-entries/${moneyEntry._id}`;
-  });
+//   const paths = moneyEntries.map((moneyEntry) => {
+//     return `/money-entries/${moneyEntry._id}`;
+//   });
 
-  // fallback: false means pages that don’t have the
-  // correct id will 404.
-  return { paths, fallback: false };
-}
+//   // fallback: false means pages that don’t have the
+//   // correct id will 404.
+//   return { paths, fallback: false };
+// }
 
 // params will contain the id for each generated page.
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
   const moneyEntry = await fetcher(
     process.env.API_URL + "/api/money-entries/" + params.moneyEntryId
   );

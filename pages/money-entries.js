@@ -75,7 +75,7 @@ export default function ListMoneyEntries({ moneyEntries }) {
   );
 }
 
-export async function getStaticProps({ params }) {
+export async function getServerSideProps() {
   const moneyEntries = await fetcher(
     process.env.API_URL + "/api/money-entries/"
   );
