@@ -7,7 +7,10 @@ async function get(req, res) {
 }
 
 async function post(req, res) {
-  const moneyEntry = await MoneyEntry.create(req.body);
+  const moneyEntry = await MoneyEntry.create({
+    ...req.body,
+    created: new Date(),
+  });
   res.status(200).json(moneyEntry);
 }
 

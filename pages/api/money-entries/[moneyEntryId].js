@@ -25,6 +25,7 @@ async function update(req, res) {
   res.json({
     _id: req.query.moneyEntryId,
     ...data,
+    updated: new Date(),
   });
 }
 
