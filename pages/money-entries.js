@@ -1,33 +1,24 @@
 import { fetcher } from "../lib/fetcher";
-import Head from "next/head";
-import Link from "next/link";
 import styles from "../styles/ListMoneyEntries.module.css";
 import { map } from "lodash";
 import { useRouter } from "next/router";
 import BackButton from "../components/BackButton";
+import MainLayout from "../components/MainLayout";
+import TopTitle from "../components/TopTitle";
+import TopDescription from "../components/TopDescription";
 
 export default function ListMoneyEntries({ moneyEntries }) {
   const router = useRouter();
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>My Money</title>
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤑</text></svg>"
-        ></link>
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
+    <MainLayout pageTitle="Money Entries">
+      <>
+        <TopTitle>
           List <span>Entries</span>
-        </h1>
+        </TopTitle>
 
-        <p className={styles.description}>
-          <BackButton /> A simple table.
-        </p>
+        <TopDescription>A simple table.</TopDescription>
 
-        <table>
+        <table className={styles.table}>
           <thead>
             <tr>
               <th>No</th>
@@ -63,18 +54,8 @@ export default function ListMoneyEntries({ moneyEntries }) {
             })}
           </tbody>
         </table>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://twitter.com/hieptuanle5"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          From Hiep Le
-        </a>
-      </footer>
-    </div>
+      </>
+    </MainLayout>
   );
 }
 

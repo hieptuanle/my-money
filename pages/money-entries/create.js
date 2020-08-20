@@ -1,11 +1,10 @@
 import styles from "../../styles/CreateMoneyEntry.module.css";
-import Head from "next/head";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/router";
-import { route } from "next/dist/next-server/server/router";
 import { postData } from "../../lib/fetcher";
-import BackButton from "../../components/BackButton";
+import MainLayout from "../../components/MainLayout";
+import TopDescription from "../../components/TopDescription";
+import TopTitle from "../../components/TopTitle";
 
 export default function CreateMoneyEntry() {
   const router = useRouter();
@@ -67,24 +66,12 @@ export default function CreateMoneyEntry() {
   }
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create</title>
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤑</text></svg>"
-        ></link>
-      </Head>
-
+    <MainLayout pageTitle="Create">
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <TopTitle>
           Create <span> Entry</span>
-        </h1>
-
-        <p className={styles.description}>
-          <BackButton />
-          What are you spending on?
-        </p>
+        </TopTitle>
+        <TopDescription>What are you spending on?</TopDescription>
 
         <div className={styles.grid}>
           <label className={styles.card} htmlFor="type">
@@ -158,12 +145,6 @@ export default function CreateMoneyEntry() {
           </button>
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a target="_blank" rel="noopener noreferrer">
-          From Hiep Le
-        </a>
-      </footer>
-    </div>
+    </MainLayout>
   );
 }

@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
 import styles from "../../styles/ViewMoneyEntry.module.css";
-import Head from "next/head";
-import swr from "swr";
 import { fetcher, putData, deleteData } from "../../lib/fetcher";
-import { create } from "lodash";
 import { useState, useRef } from "react";
-import BackButton from "../../components/BackButton";
+import MainLayout from "../../components/MainLayout";
+import TopTitle from "../../components/TopTitle";
+import TopDescription from "../../components/TopDescription";
 
 export default function ViewMoneyEntry({ moneyEntry }) {
   const router = useRouter();
@@ -77,22 +76,12 @@ export default function ViewMoneyEntry({ moneyEntry }) {
   }
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>View</title>
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤑</text></svg>"
-        ></link>
-      </Head>
+    <MainLayout pageTitle="View">
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <TopTitle>
           View <span> {moneyEntry._id.slice(-4)}</span>
-        </h1>
-        <p className={styles.description}>
-          <BackButton />
-          Wanna change something?
-        </p>
+        </TopTitle>
+        <TopDescription>Wanna change something?</TopDescription>
 
         <div className={styles.grid}>
           <label className={styles.card} htmlFor="type">
@@ -183,12 +172,7 @@ export default function ViewMoneyEntry({ moneyEntry }) {
           </button>
         </div>
       </main>
-      <footer className={styles.footer}>
-        <a target="_blank" rel="noopener noreferrer">
-          From Hiep Le
-        </a>
-      </footer>
-    </div>
+    </MainLayout>
   );
 }
 
