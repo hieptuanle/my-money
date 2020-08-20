@@ -2,9 +2,9 @@ import React from "react";
 import Head from "next/head";
 import styles from "../styles/MainLayout.module.css";
 
-export default function MainLayout({ children, pageTitle }) {
+export default function MainLayout({ children, pageTitle, hasMinWidth }) {
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${hasMinWidth ? styles.min600 : ""}`}>
       <Head>
         <title>{pageTitle}</title>
         <link
@@ -13,7 +13,9 @@ export default function MainLayout({ children, pageTitle }) {
         ></link>
       </Head>
 
-      <main className={styles.main}>{children}</main>
+      <main className={`${styles.main} ${hasMinWidth ? styles.min600 : ""}`}>
+        {children}
+      </main>
       <footer className={styles.footer}>
         <a
           href="https://twitter.com/hieptuanle5"

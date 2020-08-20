@@ -10,7 +10,7 @@ import { formatNumber } from "../lib/format-number";
 export default function ListMoneyEntries({ moneyEntries }) {
   const router = useRouter();
   return (
-    <MainLayout pageTitle="Money Entries">
+    <MainLayout pageTitle="Money Entries" hasMinWidth={true}>
       <>
         <TopTitle>
           List <span>Entries</span>

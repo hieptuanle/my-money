@@ -9,7 +9,7 @@ import { formatNumber } from "../../lib/format-number";
 
 export default function SummaryMoneyEntries({ contactTypeEntries }) {
   return (
-    <MainLayout pageTitle="Summary">
+    <MainLayout pageTitle="Summary" hasMinWidth={true}>
       <>
         <TopTitle>
           Summary <span>Table</span>
