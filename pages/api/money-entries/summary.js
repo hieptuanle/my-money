@@ -1,6 +1,6 @@
 import MoneyEntry from "../../../lib/services/MoneyEntry";
 import withErrorHandler from "../../../lib/errorHandler";
-import { startOfMonth, endOfMonth, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 
 async function get(req, res) {
   const startDate = req.query.startDate
@@ -9,8 +9,8 @@ async function get(req, res) {
   const endDate = req.query.endDate ? parseISO(req.query.endDate) : new Date();
 
   const contactTypeEntries = await MoneyEntry.groupByContactType(
-    startOfMonth(new Date(startDate)),
-    endOfMonth(new Date(endDate))
+    new Date(startDate),
+    new Date(endDate)
   );
 
   res.json(contactTypeEntries);
