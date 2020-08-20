@@ -9,7 +9,8 @@
 
 .min600 {
   min-width: 600px;
-  overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .main {
