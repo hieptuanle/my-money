@@ -22,3 +22,7 @@
 table.table {
   min-width: 500px;
 }
+
+table.table .quantity {
+  text-align: right;
+}

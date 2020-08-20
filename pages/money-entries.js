@@ -2,10 +2,10 @@ import { fetcher } from "../lib/fetcher";
 import styles from "../styles/ListMoneyEntries.module.css";
 import { map } from "lodash";
 import { useRouter } from "next/router";
-import BackButton from "../components/BackButton";
 import MainLayout from "../components/MainLayout";
 import TopTitle from "../components/TopTitle";
 import TopDescription from "../components/TopDescription";
+import { formatNumber } from "../lib/format-number";
 
 export default function ListMoneyEntries({ moneyEntries }) {
   const router = useRouter();
@@ -48,7 +48,9 @@ export default function ListMoneyEntries({ moneyEntries }) {
                   <td>{moneyEntry.type}</td>
                   <td>{moneyEntry.contact}</td>
                   <td>{moneyEntry.reason}</td>
-                  <td>{moneyEntry.amount}</td>
+                  <td className={styles.quantity}>
+                    {formatNumber(moneyEntry.amount)}
+                  </td>
                 </tr>
               );
             })}
