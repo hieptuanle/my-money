@@ -5,10 +5,12 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { route } from "next/dist/next-server/server/router";
 import { postData } from "../../lib/fetcher";
+import BackButton from "../../components/BackButton";
 
 export default function CreateMoneyEntry() {
   const router = useRouter();
   const CONTACTS = ["VDH", "4handy", "Vy", "Dũng", "Khác"];
+  const [type, setType] = useState("Cho vay");
   const [amount, setAmount] = useState("");
   const [contact, setContact] = useState("VDH");
   const [reason, setReason] = useState("");
@@ -17,11 +19,16 @@ export default function CreateMoneyEntry() {
   const amountElm = useRef(null);
   const contactElm = useRef(null);
   const reasonElm = useRef(null);
+  const typeElm = useRef(null);
   const [updating, setUpdating] = useState(false);
 
   const canSubmit = !updating && amount && contact && reason;
 
   async function submit() {
+    if (!type) {
+      typeElm.current.focus();
+      return setError("No type specified.");
+    }
     if (!amount) {
       amountElm.current.focus();
       return setError("No amount specified.");
@@ -37,6 +44,7 @@ export default function CreateMoneyEntry() {
     setUpdating(true);
     try {
       const newMoneyEntry = await postData("/api/money-entries", {
+        type,
         amount,
         contact,
         reason,
@@ -74,13 +82,30 @@ export default function CreateMoneyEntry() {
         </h1>
 
         <p className={styles.description}>
-          <a onClick={() => router.back()}>&larr;</a>
+          <BackButton />
           What are you spending on?
         </p>
 
         <div className={styles.grid}>
+          <label className={styles.card} htmlFor="type">
+            <h3>Type</h3>
+            <select
+              ref={typeElm}
+              id="tpe"
+              name="type"
+              value={type}
+              onChange={onChangeInput(setType)}
+            >
+              {["Cho vay", "Nợ"].map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <label className={styles.card} htmlFor="amount">
-            <h3>Amount &rarr;</h3>
+            <h3>Amount</h3>
             <input
               ref={amountElm}
               id="amount"
@@ -93,7 +118,7 @@ export default function CreateMoneyEntry() {
           </label>
 
           <label htmlFor="contact" className={styles.card}>
-            <h3>Contact &rarr;</h3>
+            <h3>Contact</h3>
             <select
               ref={contactElm}
               id="contact"
@@ -110,7 +135,7 @@ export default function CreateMoneyEntry() {
           </label>
 
           <label className={styles.card} htmlFor="reason">
-            <h3>Reason &rarr;</h3>
+            <h3>Reason</h3>
             <input
               ref={reasonElm}
               id="reason"
@@ -127,7 +152,7 @@ export default function CreateMoneyEntry() {
             className={styles.card}
             disabled={!canSubmit}
           >
-            <h3>Submit &rarr;</h3>
+            <h3>Submit</h3>
             <p>{error}</p>
             <p>{success}</p>
           </button>

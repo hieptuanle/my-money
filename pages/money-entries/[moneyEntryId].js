@@ -2,21 +2,26 @@ import { useRouter } from "next/router";
 import styles from "../../styles/ViewMoneyEntry.module.css";
 import Head from "next/head";
 import swr from "swr";
-import { fetcher, putData } from "../../lib/fetcher";
+import { fetcher, putData, deleteData } from "../../lib/fetcher";
 import { create } from "lodash";
 import { useState, useRef } from "react";
+import BackButton from "../../components/BackButton";
 
 export default function ViewMoneyEntry({ moneyEntry }) {
   const router = useRouter();
   const CONTACTS = ["VDH", "4handy", "Vy", "Dũng", "Khác"];
   const [amount, setAmount] = useState(moneyEntry.amount);
+  const [type, setType] = useState(moneyEntry.type || "");
   const [contact, setContact] = useState(moneyEntry.contact || "");
   const [reason, setReason] = useState(moneyEntry.reason);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [deleteSuccess, setDeleteSuccess] = useState("");
   const amountElm = useRef(null);
   const contactElm = useRef(null);
   const reasonElm = useRef(null);
+  const typeElm = useRef(null);
   const [updating, setUpdating] = useState(false);
   const canSubmit = !updating && amount && contact && reason;
 
@@ -40,7 +45,6 @@ export default function ViewMoneyEntry({ moneyEntry }) {
         contact,
         reason,
       });
-      setUpdating(false);
       setSuccess("Success!");
     } catch (e) {
       setError(e.message);
@@ -49,6 +53,19 @@ export default function ViewMoneyEntry({ moneyEntry }) {
     }
 
     setSuccess("Success!");
+  }
+
+  async function remove() {
+    setUpdating(true);
+    try {
+      await deleteData("/api/money-entries/" + moneyEntry._id);
+      setDeleteSuccess("Success!");
+      router.push("/money-entries");
+    } catch (e) {
+      setDeleteError(e.message);
+    } finally {
+      setUpdating(false);
+    }
   }
 
   function onChangeInput(changeFnc) {
@@ -73,13 +90,30 @@ export default function ViewMoneyEntry({ moneyEntry }) {
           View <span> {moneyEntry._id.slice(-4)}</span>
         </h1>
         <p className={styles.description}>
-          <a onClick={() => router.back()}>&larr;</a>
+          <BackButton />
           Wanna change something?
         </p>
 
         <div className={styles.grid}>
+          <label className={styles.card} htmlFor="type">
+            <h3>Type</h3>
+            <select
+              ref={typeElm}
+              id="type"
+              name="type"
+              value={type}
+              onChange={onChangeInput(setType)}
+            >
+              {["Cho vay", "Nợ", ""].map((type) => (
+                <option key={type} value={type}>
+                  {type || "<Select one>"}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <label className={styles.card} htmlFor="amount">
-            <h3>Amount &rarr;</h3>
+            <h3>Amount</h3>
             <input
               ref={amountElm}
               id="amount"
@@ -91,8 +125,8 @@ export default function ViewMoneyEntry({ moneyEntry }) {
             ></input>
           </label>
 
-          <label htmlFor="contact" className={styles.card}>
-            <h3>Contact &rarr;</h3>
+          <label className={styles.card} htmlFor="contact">
+            <h3>Contact</h3>
             <select
               ref={contactElm}
               id="contact"
@@ -109,7 +143,7 @@ export default function ViewMoneyEntry({ moneyEntry }) {
           </label>
 
           <label className={styles.card} htmlFor="reason">
-            <h3>Reason &rarr;</h3>
+            <h3>Reason</h3>
             <input
               ref={reasonElm}
               id="reason"
@@ -126,9 +160,26 @@ export default function ViewMoneyEntry({ moneyEntry }) {
             className={styles.card}
             disabled={!canSubmit}
           >
-            <h3>Update &rarr;</h3>
+            <h3>Update</h3>
             <p>{error}</p>
             <p>{success}</p>
+          </button>
+
+          <button
+            className={styles["delete-button"] + " " + styles.card}
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Do you really want to delete this entry? This action CANNOT be undone."
+                )
+              ) {
+                remove();
+              }
+            }}
+          >
+            <h3>Delete</h3>
+            <p>{deleteError}</p>
+            <p>{deleteSuccess}</p>
           </button>
         </div>
       </main>

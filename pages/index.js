@@ -23,14 +23,14 @@ export default function Home() {
         <div className={styles.grid}>
           <Link href="/money-entries/create">
             <a className={styles.card}>
-              <h3>Create &rarr;</h3>
+              <h3>Create</h3>
               <p>New money entry.</p>
             </a>
           </Link>
 
           <Link href="/money-entries">
             <a className={styles.card}>
-              <h3>List &rarr;</h3>
+              <h3>List</h3>
               <p>Show all your money entries.</p>
             </a>
           </Link>
@@ -39,7 +39,7 @@ export default function Home() {
             href="https://github.com/vercel/next.js/tree/master/examples"
             className={styles.card}
           >
-            <h3>Summary &rarr;</h3>
+            <h3>Summary</h3>
             <p>A table worth a thousand words.</p>
           </a>
 
@@ -47,7 +47,7 @@ export default function Home() {
             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
             className={styles.card}
           >
-            <h3>Friends &rarr;</h3>
+            <h3>Friends</h3>
             <p>We live in a social world.</p>
           </a>
         </div>

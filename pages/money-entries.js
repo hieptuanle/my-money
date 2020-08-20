@@ -4,6 +4,7 @@ import Link from "next/link";
 import styles from "../styles/ListMoneyEntries.module.css";
 import { map } from "lodash";
 import { useRouter } from "next/router";
+import BackButton from "../components/BackButton";
 
 export default function ListMoneyEntries({ moneyEntries }) {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function ListMoneyEntries({ moneyEntries }) {
         </h1>
 
         <p className={styles.description}>
-          <a onClick={() => router.back()}>&larr;</a> A simple table.
+          <BackButton /> A simple table.
         </p>
 
         <table>
@@ -32,6 +33,7 @@ export default function ListMoneyEntries({ moneyEntries }) {
               <th>No</th>
               <th>ID</th>
               <th>Created</th>
+              <th>Type</th>
               <th>Contact</th>
               <th>Reason</th>
               <th>Amount</th>
@@ -52,6 +54,7 @@ export default function ListMoneyEntries({ moneyEntries }) {
                   <td>
                     {created.getDate()}/{created.getMonth() + 1}
                   </td>
+                  <td>{moneyEntry.type}</td>
                   <td>{moneyEntry.contact}</td>
                   <td>{moneyEntry.reason}</td>
                   <td>{moneyEntry.amount}</td>
