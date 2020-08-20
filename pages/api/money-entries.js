@@ -1,5 +1,6 @@
 import MoneyEntry from "../../lib/services/MoneyEntry";
 import withErrorHandler from "../../lib/errorHandler";
+import { parseISO } from "date-fns";
 
 async function get(req, res) {
   const moneyEntries = await MoneyEntry.list();
@@ -9,6 +10,7 @@ async function get(req, res) {
 async function post(req, res) {
   const moneyEntry = await MoneyEntry.create({
     ...req.body,
+    time: req.body.time ? parseISO(req.body.time) : new Date(),
     created: new Date(),
   });
   res.status(200).json(moneyEntry);
