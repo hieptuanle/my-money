@@ -30,13 +30,12 @@ export default function Home() {
             </a>
           </Link>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Summary</h3>
-            <p>A table worth a thousand words.</p>
-          </a>
+          <Link href="/money-entries/summary">
+            <a className={styles.card}>
+              <h3>Summary</h3>
+              <p>A table worth a thousand words.</p>
+            </a>
+          </Link>
 
           <a
             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"

@@ -9,8 +9,8 @@ async function get(req, res) {
   const endDate = req.query.endDate ? parseISO(req.query.endDate) : new Date();
 
   const contactTypeEntries = await MoneyEntry.groupByContactType(
-    new Date(startDate),
-    new Date(endDate)
+    startDate,
+    endDate
   );
 
   res.json(contactTypeEntries);
