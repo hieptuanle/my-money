@@ -7,10 +7,12 @@ import { map } from "lodash";
 import { formatNumber } from "../../lib/format-number";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/client";
+import Spinner from "../../components/Spinner";
 
 export default function SummaryMoneyEntries() {
   const [contactTypeEntries, setContactTypeEntries] = useState([]);
   const [session, loading] = useSession();
+  const [fetching, setFetching] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const startDate = startOfMonth(new Date());
@@ -25,8 +27,16 @@ export default function SummaryMoneyEntries() {
       const json = await res.json();
       setContactTypeEntries(json);
     };
-    fetchData();
+    setFetching(true);
+    fetchData().finally(() => {
+      setFetching(false);
+    });
   }, [session]);
+
+  if (loading || fetching) {
+    return <Spinner />;
+  }
+
   return (
     <MainLayout pageTitle="Summary" hasMinWidth={true}>
       <>

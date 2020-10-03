@@ -8,19 +8,29 @@ import { formatNumber } from "../lib/format-number";
 import { useSession } from "next-auth/client";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import Spinner from "../components/Spinner";
 
 export default function ListMoneyEntries() {
   const [session, loading] = useSession();
   const [moneyEntries, setMoneyEntries] = useState([]);
+  const [fetching, setFetching] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/money-entries/");
       const json = await res.json();
       setMoneyEntries(json);
     };
-    fetchData();
+    setFetching(true);
+    fetchData().finally(() => {
+      setFetching(false);
+    });
   }, [session]);
   const router = useRouter();
+
+  if (loading || fetching) {
+    return <Spinner />;
+  }
 
   return (
     <MainLayout pageTitle="Money Entries" hasMinWidth={true}>
