@@ -7,6 +7,7 @@ import TopDescription from "../components/TopDescription";
 import { formatNumber } from "../lib/format-number";
 import { useSession } from "next-auth/client";
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
 export default function ListMoneyEntries() {
   const [session, loading] = useSession();
@@ -34,7 +35,6 @@ export default function ListMoneyEntries() {
           <thead>
             <tr>
               <th>No</th>
-              <th>ID</th>
               <th>Created</th>
               <th>Type</th>
               <th>Contact</th>
@@ -44,7 +44,8 @@ export default function ListMoneyEntries() {
           </thead>
           <tbody>
             {map(moneyEntries, (moneyEntry, index) => {
-              const created = new Date(moneyEntry.created);
+              console.log(moneyEntry.created);
+              const created = moneyEntry.created;
               return (
                 <tr
                   key={moneyEntry._id}
@@ -53,9 +54,8 @@ export default function ListMoneyEntries() {
                   }}
                 >
                   <td>{index + 1}</td>
-                  <td>{moneyEntry._id}</td>
                   <td>
-                    {created.getDate()}/{created.getMonth() + 1}
+                    {created ? format(new Date(created), "yyyy-MM-dd") : ""}
                   </td>
                   <td>{moneyEntry.type}</td>
                   <td>{moneyEntry.contact}</td>
