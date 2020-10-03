@@ -1,6 +1,7 @@
 import MoneyEntry from "../../../lib/services/MoneyEntry";
 import withErrorHandler from "../../../lib/errorHandler";
 import { parseISO } from "date-fns";
+import requireAuthentication from "../../../lib/authentication";
 
 async function get(req, res) {
   const startDate = req.query.startDate
@@ -16,8 +17,10 @@ async function get(req, res) {
   res.json(contactTypeEntries);
 }
 
-export default withErrorHandler(async (req, res) => {
-  if (req.method === "GET") return await get(req, res);
+export default requireAuthentication(
+  withErrorHandler(async (req, res) => {
+    if (req.method === "GET") return await get(req, res);
 
-  res.redirect("404");
-});
+    res.redirect("404");
+  })
+);

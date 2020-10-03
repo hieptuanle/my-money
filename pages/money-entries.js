@@ -1,4 +1,3 @@
-import { fetcher } from "../lib/fetcher";
 import styles from "../styles/ListMoneyEntries.module.css";
 import { map } from "lodash";
 import { useRouter } from "next/router";
@@ -6,9 +5,22 @@ import MainLayout from "../components/MainLayout";
 import TopTitle from "../components/TopTitle";
 import TopDescription from "../components/TopDescription";
 import { formatNumber } from "../lib/format-number";
+import { useSession } from "next-auth/client";
+import { useEffect, useState } from "react";
 
-export default function ListMoneyEntries({ moneyEntries }) {
+export default function ListMoneyEntries() {
+  const [session, loading] = useSession();
+  const [moneyEntries, setMoneyEntries] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/money-entries/");
+      const json = await res.json();
+      setMoneyEntries(json);
+    };
+    fetchData();
+  }, [session]);
   const router = useRouter();
+
   return (
     <MainLayout pageTitle="Money Entries" hasMinWidth={true}>
       <>
@@ -41,7 +53,7 @@ export default function ListMoneyEntries({ moneyEntries }) {
                   }}
                 >
                   <td>{index + 1}</td>
-                  <td>{moneyEntry._id.slice(-4)}</td>
+                  <td>{moneyEntry._id}</td>
                   <td>
                     {created.getDate()}/{created.getMonth() + 1}
                   </td>
@@ -59,15 +71,4 @@ export default function ListMoneyEntries({ moneyEntries }) {
       </>
     </MainLayout>
   );
-}
-
-export async function getServerSideProps() {
-  const moneyEntries = await fetcher(
-    process.env.API_URL + "/api/money-entries/"
-  );
-  return {
-    props: {
-      moneyEntries,
-    },
-  };
 }

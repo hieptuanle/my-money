@@ -3,11 +3,30 @@ import TopTitle from "../../components/TopTitle";
 import TopDescription from "../../components/TopDescription";
 import styles from "../../styles/SummaryMoneyEntries.module.css";
 import { startOfMonth, endOfMonth, formatISO } from "date-fns";
-import { fetcher } from "../../lib/fetcher";
 import { map } from "lodash";
 import { formatNumber } from "../../lib/format-number";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/client";
 
-export default function SummaryMoneyEntries({ contactTypeEntries }) {
+export default function SummaryMoneyEntries() {
+  const [contactTypeEntries, setContactTypeEntries] = useState([]);
+  const [session, loading] = useSession();
+  useEffect(() => {
+    const fetchData = async () => {
+      const startDate = startOfMonth(new Date());
+      const endDate = endOfMonth(new Date());
+
+      const res = await fetch(
+        "/api/money-entries/summary?startDate=" +
+          encodeURIComponent(formatISO(startDate)) +
+          "&endDate=" +
+          encodeURIComponent(formatISO(endDate))
+      );
+      const json = await res.json();
+      setContactTypeEntries(json);
+    };
+    fetchData();
+  }, [session]);
   return (
     <MainLayout pageTitle="Summary" hasMinWidth={true}>
       <>
@@ -44,22 +63,4 @@ export default function SummaryMoneyEntries({ contactTypeEntries }) {
       </>
     </MainLayout>
   );
-}
-
-export async function getServerSideProps() {
-  const startDate = startOfMonth(new Date());
-  const endDate = endOfMonth(new Date());
-
-  const contactTypeEntries = await fetcher(
-    process.env.API_URL +
-      "/api/money-entries/summary?startDate=" +
-      encodeURIComponent(formatISO(startDate)) +
-      "&endDate=" +
-      encodeURIComponent(formatISO(endDate))
-  );
-  return {
-    props: {
-      contactTypeEntries,
-    },
-  };
 }

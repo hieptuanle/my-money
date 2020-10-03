@@ -1,18 +1,23 @@
 import { useRouter } from "next/router";
 import styles from "../../styles/ViewMoneyEntry.module.css";
-import { fetcher, putData, deleteData } from "../../lib/fetcher";
-import { useState, useRef } from "react";
+import { putData, deleteData } from "../../lib/fetcher";
+import { useState, useRef, useEffect } from "react";
 import MainLayout from "../../components/MainLayout";
 import TopTitle from "../../components/TopTitle";
 import TopDescription from "../../components/TopDescription";
+import { useSession } from "next-auth/client";
+import Spinner from "../../components/Spinner";
 
-export default function ViewMoneyEntry({ moneyEntry }) {
+export default function ViewMoneyEntry({ params }) {
+  const { session, loading } = useSession();
+  const [moneyEntry, setMoneyEntry] = useState({
+    type: "",
+    amount: "",
+    contact: "",
+    reason: "",
+  });
   const router = useRouter();
   const CONTACTS = ["VDH", "4handy", "Vy", "Dũng", "Khác"];
-  const [amount, setAmount] = useState(moneyEntry.amount);
-  const [type, setType] = useState(moneyEntry.type || "");
-  const [contact, setContact] = useState(moneyEntry.contact || "");
-  const [reason, setReason] = useState(moneyEntry.reason);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [deleteError, setDeleteError] = useState("");
@@ -22,36 +27,59 @@ export default function ViewMoneyEntry({ moneyEntry }) {
   const reasonElm = useRef(null);
   const typeElm = useRef(null);
   const [updating, setUpdating] = useState(false);
-  const canSubmit = !updating && amount && contact && reason;
+  const canSubmit =
+    !updating &&
+    moneyEntry.type &&
+    moneyEntry.amount &&
+    moneyEntry.contact &&
+    moneyEntry.reason;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/money-entries/" + params.moneyEntryId);
+      const moneyEntry = await res.json();
+      moneyEntry.contact = moneyEntry.contact || "";
+      moneyEntry.type = moneyEntry.type || "";
+      moneyEntry.amount = moneyEntry.amount || "";
+      moneyEntry.reason = moneyEntry.reason || "";
+      setMoneyEntry(moneyEntry);
+    };
+    fetchData();
+  }, [session]);
 
   async function submit() {
-    if (!amount) {
+    if (!moneyEntry.amount) {
       amountElm.current.focus();
       return setError("No amount specified.");
     }
-    if (!contact) {
-      contact.current.focus();
+    if (!moneyEntry.contact) {
+      contactElm.current.focus();
       return setError("No contact specified.");
     }
-    if (!reason) {
+    if (!moneyEntry.reason) {
       reasonElm.current.focus();
       return setError("No reason specified.");
     }
     setUpdating(true);
     try {
-      await putData("/api/money-entries/" + moneyEntry._id, {
-        amount,
-        contact,
-        reason,
+      const res = await putData("/api/money-entries/" + moneyEntry._id, {
+        type: moneyEntry.type,
+        amount: moneyEntry.amount,
+        contact: moneyEntry.contact,
+        reason: moneyEntry.reason,
       });
       setSuccess("Success!");
+      setTimeout(() => {
+        setSuccess("");
+      }, 2000);
     } catch (e) {
       setError(e.message);
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     } finally {
       setUpdating(false);
     }
-
-    setSuccess("Success!");
   }
 
   async function remove() {
@@ -67,13 +95,17 @@ export default function ViewMoneyEntry({ moneyEntry }) {
     }
   }
 
-  function onChangeInput(changeFnc) {
+  function onChangeValue(field) {
     return function (e) {
-      changeFnc(e.target.value);
-      setError("");
-      setSuccess("");
+      const newMoneyEntry = {
+        ...moneyEntry,
+        [field]: e.target.value,
+      };
+      setMoneyEntry(newMoneyEntry);
     };
   }
+
+  if (!moneyEntry._id) return <Spinner></Spinner>;
 
   return (
     <MainLayout pageTitle="View">
@@ -90,8 +122,8 @@ export default function ViewMoneyEntry({ moneyEntry }) {
               ref={typeElm}
               id="type"
               name="type"
-              value={type}
-              onChange={onChangeInput(setType)}
+              value={moneyEntry.type}
+              onChange={onChangeValue("type")}
             >
               {["Cho vay", "Nợ", ""].map((type) => (
                 <option key={type} value={type}>
@@ -108,9 +140,9 @@ export default function ViewMoneyEntry({ moneyEntry }) {
               id="amount"
               name="amount"
               type="text"
-              value={amount}
+              value={moneyEntry.amount}
               placeholder="Eg: 30,000"
-              onChange={onChangeInput(setAmount)}
+              onChange={onChangeValue("amount")}
             ></input>
           </label>
 
@@ -120,8 +152,8 @@ export default function ViewMoneyEntry({ moneyEntry }) {
               ref={contactElm}
               id="contact"
               name="contact"
-              value={contact}
-              onChange={onChangeInput(setContact)}
+              value={moneyEntry.contact}
+              onChange={onChangeValue("contact")}
             >
               {CONTACTS.concat("").map((contact) => (
                 <option key={contact} value={contact}>
@@ -138,9 +170,9 @@ export default function ViewMoneyEntry({ moneyEntry }) {
               id="reason"
               name="reason"
               type="text"
-              value={reason}
+              value={moneyEntry.reason}
               placeholder="Eg: Breakfast"
-              onChange={onChangeInput(setReason)}
+              onChange={onChangeValue("reason")}
             ></input>
           </label>
 
@@ -150,7 +182,7 @@ export default function ViewMoneyEntry({ moneyEntry }) {
             disabled={!canSubmit}
           >
             <h3>Update</h3>
-            <p>{error}</p>
+            <p style={{ color: "red" }}>{error}</p>
             <p>{success}</p>
           </button>
 
@@ -176,28 +208,11 @@ export default function ViewMoneyEntry({ moneyEntry }) {
   );
 }
 
-// export async function getStaticPaths() {
-//   const moneyEntries = await fetcher(
-//     process.env.API_URL + "/api/money-entries"
-//   );
-
-//   const paths = moneyEntries.map((moneyEntry) => {
-//     return `/money-entries/${moneyEntry._id}`;
-//   });
-
-//   // fallback: false means pages that don’t have the
-//   // correct id will 404.
-//   return { paths, fallback: false };
-// }
-
 // params will contain the id for each generated page.
 export async function getServerSideProps({ params }) {
-  const moneyEntry = await fetcher(
-    process.env.API_URL + "/api/money-entries/" + params.moneyEntryId
-  );
   return {
     props: {
-      moneyEntry,
+      params,
     },
   };
 }
