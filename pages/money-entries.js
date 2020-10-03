@@ -54,7 +54,6 @@ export default function ListMoneyEntries() {
           </thead>
           <tbody>
             {map(moneyEntries, (moneyEntry, index) => {
-              console.log(moneyEntry.created);
               const created = moneyEntry.created;
               return (
                 <tr
