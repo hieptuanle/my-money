@@ -7,7 +7,7 @@ import Spinner from "./Spinner";
 
 export default function MainLayout({ children, pageTitle, hasMinWidth }) {
   const [session, loading] = useSession();
-  if (loading)
+  if (loading && !session)
     return (
       <div>
         <Spinner />
