@@ -14,6 +14,7 @@ export default function SummaryMoneyEntries() {
   const [session, loading] = useSession();
   const [fetching, setFetching] = useState(false);
   useEffect(() => {
+    if (!session) return;
     const fetchData = async () => {
       const startDate = startOfMonth(new Date());
       const endDate = endOfMonth(new Date());
