@@ -31,7 +31,7 @@ export default function SummaryMoneyEntries() {
     });
   }, []);
 
-  if (loading || fetching) {
+  if (fetching) {
     return <Spinner />;
   }
 
