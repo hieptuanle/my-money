@@ -5,11 +5,9 @@ import { useState, useRef, useEffect } from "react";
 import MainLayout from "../../components/MainLayout";
 import TopTitle from "../../components/TopTitle";
 import TopDescription from "../../components/TopDescription";
-import { useSession } from "next-auth/client";
 import Spinner from "../../components/Spinner";
 
 export default function ViewMoneyEntry({ params }) {
-  const { session, loading } = useSession();
   const [moneyEntry, setMoneyEntry] = useState({
     type: "",
     amount: "",
@@ -45,7 +43,7 @@ export default function ViewMoneyEntry({ params }) {
       setMoneyEntry(moneyEntry);
     };
     fetchData();
-  }, [session]);
+  }, []);
 
   async function submit() {
     if (!moneyEntry.amount) {

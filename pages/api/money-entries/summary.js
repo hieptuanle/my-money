@@ -17,10 +17,8 @@ async function get(req, res) {
   res.json(contactTypeEntries);
 }
 
-export default requireAuthentication(
-  withErrorHandler(async (req, res) => {
-    if (req.method === "GET") return await get(req, res);
+export default withErrorHandler(async (req, res) => {
+  if (req.method === "GET") return await get(req, res);
 
-    res.redirect("404");
-  })
-);
+  res.redirect("404");
+});

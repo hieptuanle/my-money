@@ -17,10 +17,8 @@ async function post(req, res) {
   res.status(200).json(moneyEntry);
 }
 
-export default requireAuthentication(
-  withErrorHandler(async (req, res) => {
-    if (req.method === "GET") return await get(req, res);
-    if (req.method === "POST") return await post(req, res);
-    res.redirect("/404");
-  })
-);
+export default withErrorHandler(async (req, res) => {
+  if (req.method === "GET") return await get(req, res);
+  if (req.method === "POST") return await post(req, res);
+  res.redirect("/404");
+});

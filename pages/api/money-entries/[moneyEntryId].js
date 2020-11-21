@@ -30,12 +30,10 @@ async function update(req, res) {
   });
 }
 
-export default requireAuthentication(
-  withErrorHandler(async (req, res) => {
-    if (req.method === "GET") return await get(req, res);
-    if (req.method === "DELETE") return await remove(req, res);
-    if (req.method === "PUT") return await update(req, res);
+export default withErrorHandler(async (req, res) => {
+  if (req.method === "GET") return await get(req, res);
+  if (req.method === "DELETE") return await remove(req, res);
+  if (req.method === "PUT") return await update(req, res);
 
-    res.redirect("404");
-  })
-);
+  res.redirect("404");
+});

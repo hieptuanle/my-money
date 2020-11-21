@@ -5,13 +5,12 @@ import MainLayout from "../components/MainLayout";
 import TopTitle from "../components/TopTitle";
 import TopDescription from "../components/TopDescription";
 import { formatNumber } from "../lib/format-number";
-import { useSession } from "next-auth/client";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import Spinner from "../components/Spinner";
+import Link from "next/link";
 
 export default function ListMoneyEntries() {
-  const [session, loading] = useSession();
   const [moneyEntries, setMoneyEntries] = useState([]);
   const [fetching, setFetching] = useState(false);
 
@@ -25,10 +24,10 @@ export default function ListMoneyEntries() {
     fetchData().finally(() => {
       setFetching(false);
     });
-  }, [session]);
+  }, []);
   const router = useRouter();
 
-  if (loading || fetching) {
+  if (fetching) {
     return <Spinner />;
   }
 
@@ -56,13 +55,12 @@ export default function ListMoneyEntries() {
             {map(moneyEntries, (moneyEntry, index) => {
               const created = moneyEntry.created;
               return (
-                <tr
-                  key={moneyEntry._id}
-                  onClick={() => {
-                    router.push("/money-entries/" + moneyEntry._id);
-                  }}
-                >
-                  <td>{index + 1}</td>
+                <tr key={moneyEntry._id}>
+                  <td>
+                    <Link href={"/money-entries/" + moneyEntry._id}>
+                      <a>{index + 1}</a>
+                    </Link>
+                  </td>
                   <td>
                     {created ? format(new Date(created), "yyyy-MM-dd") : ""}
                   </td>
